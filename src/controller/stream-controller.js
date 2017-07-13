@@ -1513,21 +1513,19 @@ _checkBuffer() {
   }
 
   _updateCurrentFrag(details, levelId) {
-    if (!this.fragCurrent || this.fragCurrent.level !== levelId) {
-      return;
-    }
-
-    // find the fragment in the frag list
-    let foundFrag = details.fragments.find(frag => frag.sn === this.fragCurrent.sn);
-    if (foundFrag && foundFrag !== this.fragCurrent) {
-      // fragCurrent is not in the details.fragments list
-      // copy values over from fragCurrent because it may have relevant info like PTS
-      this.fragCurrent = Object.assign(foundFrag, this.fragCurrent);
-      logger.log('updated the reference to current fragment for new level', {
-        fragCurrent : this.fragCurrent,
-        details,
-        levelId
-      });
+    if (this.fragCurrent && this.fragCurrent.level === levelId) {
+      // find the fragment in the frag list by sequence number
+      let foundFrag = details.fragments.find(frag => frag.sn === this.fragCurrent.sn);
+      if (foundFrag && foundFrag !== this.fragCurrent) {
+        // fragCurrent is not in the details.fragments list
+        // copy values over from fragCurrent because it may have relevant info like PTS
+        this.fragCurrent = Object.assign(foundFrag, this.fragCurrent);
+        logger.log('updated the reference to current fragment for new level', {
+          fragCurrent : this.fragCurrent,
+          details,
+          levelId
+        });
+      }
     }
   }
 
