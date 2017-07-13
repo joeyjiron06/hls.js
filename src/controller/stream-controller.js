@@ -893,7 +893,7 @@ class StreamController extends EventHandler {
       var curDetails = curLevel.details;
       if (curDetails && newDetails.fragments.length > 0) {
         // we already have details for that level, merge them
-        LevelHelper.mergeDetails(curDetails,newDetails, newLevelId);
+        LevelHelper.mergeDetails(curDetails,newDetails);
 
         // we also need to update the reference of the current fragment
         // since we have a new playlist
