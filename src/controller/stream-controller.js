@@ -893,7 +893,12 @@ class StreamController extends EventHandler {
       var curDetails = curLevel.details;
       if (curDetails && newDetails.fragments.length > 0) {
         // we already have details for that level, merge them
-        LevelHelper.mergeDetails(curDetails,newDetails);
+        LevelHelper.mergeDetails(curDetails,newDetails, newLevelId);
+
+        // we also need to update the reference of the current fragment
+        // since we have a new playlist
+        this._updateCurrentFrag(newDetails);
+
         sliding = newDetails.fragments[0].start;
         this.liveSyncPosition = this.computeLivePosition(sliding, curDetails);
         if (newDetails.PTSKnown) {
@@ -1504,6 +1509,25 @@ _checkBuffer() {
           }
         }
       }
+    }
+  }
+
+  _updateCurrentFrag(details, levelId) {
+    if (!this.fragCurrent || this.fragCurrent.level !== levelId) {
+      return;
+    }
+
+    // find the fragment in the frag list
+    let foundFrag = details.fragments.find(frag => frag.sn === this.fragCurrent.sn);
+    if (foundFrag && foundFrag !== this.fragCurrent) {
+      // fragCurrent is not in the details.fragments list
+      // copy values over from fragCurrent because it may have relevant info like PTS
+      this.fragCurrent = Object.assign(foundFrag, this.fragCurrent);
+      logger.log('updated the reference to current fragment for new level', {
+        fragCurrent : this.fragCurrent,
+        details,
+        levelId
+      });
     }
   }
 
