@@ -897,7 +897,7 @@ class StreamController extends EventHandler {
 
         // we also need to update the reference of the current fragment
         // since we have a new playlist
-        this._updateCurrentFrag(newDetails);
+        this._updateCurrentFrag(newDetails, newLevelId);
 
         sliding = newDetails.fragments[0].start;
         this.liveSyncPosition = this.computeLivePosition(sliding, curDetails);
